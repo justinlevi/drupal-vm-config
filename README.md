@@ -1,5 +1,5 @@
 #My Config & Setup Instructions for Drupal-VM
-This is a collection of my notes and an attempt at a step-by-step guide of what worked for me
+Here's a step-by-step guide of what worked for me
 
 
 (https://raw.githubusercontent.com/geerlingguy/drupal-vm/master/docs/images/drupal-vm-logo.png)
