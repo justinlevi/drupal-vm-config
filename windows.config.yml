@@ -150,12 +150,12 @@ mysql_databases:
     collation: utf8_general_ci
 
   - name: "<SITE-A>"
-  encoding: utf8
-  collation: utf8_general_ci
+    encoding: utf8
+    collation: utf8_general_ci
 
   - name: "<SITE-B>"
-  encoding: utf8
-  collation: utf8_general_ci
+    encoding: utf8
+    collation: utf8_general_ci
 
 mysql_users:
   - name: "{{ drupal_mysql_user }}"
