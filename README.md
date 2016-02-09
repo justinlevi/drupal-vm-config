@@ -235,7 +235,7 @@ db: drupal
 #OPTIONAL - END
 
 # Visit your new fancy site @
-http://vm.<SITE-A>
+http://<SITE-A>.vm.dev
 
 # Rejoice :tada:
 
