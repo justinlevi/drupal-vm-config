@@ -163,7 +163,8 @@ Extract them to your $HOME Directory
 - Also, copy both .acquia & .drush folders into your site root
 
 
-## Create an alias for each site in a drush folder one level up from the root of each drupal site.
+## Create an alias for each site in a drush folder one level up from the root of each drupal site. 
+Note, there are different spots you could place your drush alias but this will keep the alias with the site. Unfortunately, this means you will need to run your sql-sync commands from within the docroot.
 `aliases.drushrc.php`
 
 ```php
@@ -176,6 +177,20 @@ $aliases['<SITE-A>.vm.dev'] = array(
   'ssh-options' => '-o PasswordAuthentication=no -i ~/.vagrant.d/insecure_private_key',
 );
 ```
+
+Here is my alias for nysptracs
+```php
+<?php
+
+$aliases['vm.tracs'] = array(
+  'uri' => 'nysptracs.dev',
+  'root' => '/var/www/devdesktop/nysptracs/docroot',
+  'remote-host' => 'nysptracs.dev',
+  'remote-user' => 'vagrant',
+  'ssh-options' => '-o PasswordAuthentication=no -i ~/.vagrant.d/insecure_private_key',
+);
+```
+
 
 ## Connect to the database
 
@@ -200,12 +215,42 @@ $conf['file_temporary_path'] = '/var/www/drupal-temporary-path';
 
 Rinse & repeat for the other sites.
 
+Here is my settings.php file for nysptracs
+```php
+<?php
+$databases['default']['default'] = array(
+    'driver' => 'mysql',
+    'database' => 'nysptracs',
+    'username' => 'root',
+    'password' => 'root',
+    'host' => 'localhost',
+   'prefix' => '',
+);
+
+$conf['securepages_enable'] = FALSE;
+$conf['file_private_path'] = '/var/www/drupal-private-file-system';
+$conf['file_temporary_path'] = '/var/www/drupal-temporary-path';
+```
+
 ### Update your hosts file
 Edit C:Windows/System32/drivers/etc/hosts
 Add the following line
 `192.168.88.88 vm.dev <SITE-A>.vm.dev <SITE-B>.vm.dev <SITE-C>.vm.dev adminer.vm.dev xhprof.vm.dev pimpmylog.vm.dev`
 
-### Create the databases for each site
+Here is what my hosts file looks like
+```
+# localhost name resolution is handled within DNS itself.
+#	127.0.0.1       localhost
+#	::1             localhost
+127.0.0.1       docroot.dd
+127.0.0.1       nysafeschools.dev.dd
+127.0.0.1       nyspcentennial.dev.dd
+127.0.0.1       nysptracs.dev.dd
+192.168.88.88   nysptracs.dev nysafeschools.dev adminer.vm.dev xhprof.vm.dev pimpmylog.vm.dev
+```
+
+### Create the databases for each site 
+**Only needed if you don't setup the databases in your config file** 
 1. Open a browser and go to the url : http://adminer.vm.dev
 2. login with the root/root
 3. Create a database for each site you want to wire up
@@ -213,6 +258,8 @@ Add the following line
 ## Download the database to your local virtual machine
 $ `drush @YOUR-ACQUIA-REMOTE-ALIAS.dev sql-dump --structure-tables-list="hist*,cache*,*cache,sessions" | drush @<SITE-A>.vm.dev sql-cli`
 
+Here is the drush command for updating my nysptracs database
+$`drush @nysptracs.dev sql-dump --structure-tables-list="hist*,cache*,*cache,sessions" | drush @vm.tracs sql-cli`
 
 #OPTIONAL - START
 #Install the Drush registry_rebuild "module"
@@ -231,11 +278,13 @@ db: drupal
 
 ### Rebuild the registry via
 `drush @<SITE-A>.vm.dev rr --fire-bazooka`
-
 #OPTIONAL - END
 
 # Visit your new fancy site @
-http://SITE-A.vm.dev
+http://YOUR-SITE-NAME.dev
+
+example:
+http://nysptracs.dev
 
 # Rejoice :tada:
 
