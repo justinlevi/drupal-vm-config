@@ -2,7 +2,6 @@
 Here's a step-by-step guide of what worked for me
 
 
-(https://raw.githubusercontent.com/geerlingguy/drupal-vm/master/docs/images/drupal-vm-logo.png)
 [Drupal VM](http://www.drupalvm.com/) is A VM for local Drupal development, built with Vagrant + Ansible.
 
 
