@@ -1,5 +1,5 @@
 #My Config & Setup Instructions for Drupal-VM
-Here's a step-by-step guide of what worked for me
+Below is a step-by-step guide of what worked for me
 
 
 [Drupal VM](http://www.drupalvm.com/) is A VM for local Drupal development, built with Vagrant + Ansible.
