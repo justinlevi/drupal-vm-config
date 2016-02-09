@@ -55,7 +55,7 @@ If you're using Cmder, do this:
 
 # Make required config.yml changes
 create a `config.yml` file in the drupal-vm cloned folder at the same level as the example.config.yml
-You can either copy the `windows.config.yml` or `mac.config.yml` from this repository or you can modify the `example.config.yml` provided with the drupal-vm repo
+You can either copy the https://github.com/justinlevi/drupal-vm-config/blob/master/justin.windows.config.yml, the `windows.config.yml`, or `mac.config.yml` from this repository or you can modify the `example.config.yml` provided with the drupal-vm repo. 
 
 You'll want to minimally change the following:
 ```yaml
