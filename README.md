@@ -295,11 +295,152 @@ $`sudo service apache2 start`
 
 Behat tests
 ======================================
-Coming Soon...
+ssh into the vagrant box
+$ `ssh vagrant`
+
+Create a btests folder one level above your drupal docroot and add the following files in there.
+example `/var/www/devdesktop/nysptracs/btests/`
+
+**behat.yml**
+```yaml
+default:
+  gherkin:
+    filters:
+      tags: "~@skip"
+  suites:
+    homepage:
+      paths: [%paths.base%/features/homepage]
+      contexts:
+        - FeatureContext
+        - DrupalFeatureContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
+  extensions:
+    Behat\MinkExtension:
+      base_url: http://nysptracs.dev
+      files_path: '/var/www/btests/files'
+      goutte: ~
+      selenium2:
+        wd_host: "http://localhost:8643/wd/hub"
+    Drupal\DrupalExtension:
+      blackbox: ~
+      api_driver: 'drupal'
+      drush:
+        alias: 'local'
+      drupal:
+        drupal_root: '/var/www/devdesktop/nysptracs/docroot'
+      region_map:
+        header: "#header"
+        logo:  "#logo"
+      selectors:
+        message_selector: '.messages'
+        error_message_selector: '.messages.messages.error'
+        success_message_selector: '.messages.messages.status'
+```
+
+**composer.json**
+```json
+{
+  "require": {
+    "drupal/drupal-extension": "~3.0"
+},
+  "config": {
+    "bin-dir": "bin/"
+  }
+}
+
+```
+
+features/bootstrap/DrupalFeatureContext.php
+```php
+<?php
+
+use Drupal\DrupalExtension\Context\RawDrupalContext;
+use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
+
+/**
+ * Defines application features from the specific context.
+ */
+class DrupalFeatureContext extends RawDrupalContext implements SnippetAcceptingContext {
+
+  /**
+   * Initializes context.
+   *
+   * Every scenario gets its own context instance.
+   * You can also pass arbitrary arguments to the
+   * context constructor through behat.yml.
+   */
+  public function __construct() {
+  }
+}
+```
+
+features/bootstrap/FeatureContext.php
+```php
+<?php
+
+use Drupal\DrupalExtension\Context\RawDrupalContext;
+use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
+
+/**
+ * Defines application features from the specific context.
+ */
+class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext {
+
+  /**
+   * Initializes context.
+   *
+   * Every scenario gets its own context instance.
+   * You can also pass arbitrary arguments to the
+   * context constructor through behat.yml.
+   */
+  public function __construct() {
+  }
+
+}
+```
+
+homepage/frontpage.feature
+```
+Feature:  Be the Borg
+  As a superior cybernetic organism
+  I need to assimilate other species
+  In order to grow the hive mind
+  And become the best borg I can be
+
+  Scenario:  Global Nav Area
+    Given I am on the homepage
+    Then I should see a ".nygov-universal-container" element
+
+  Scenario:  Global Footer Area
+    Given I am on the homepage
+    Then I should see a ".nys-global-footer" element
+```
+
+Run your behat tests from within the `btests` folder
+
+runs all tests
+$ `behat`
+
+runs just the tests in the homepage folder
+$ `behat -s hompage`
 
 Visual Regression Tests
 ======================================
 
+ssh into the vagrant box
+$ `ssh vagrant`
+
+Install the following node libraries
+$ `sudo npm install -g jquery`
+$ `sudo npm install -g phantomcss`
+$ `sudo npm install -g phantomjs@"1.9.8"`
+$ `sudo npm install -g webdriverio@"2.4.5"`
 
 Here's my globally installed node packages:
 $ `npm list -g --depth=0`
@@ -310,13 +451,10 @@ $ `npm list -g --depth=0`
 ├── webdriverio@2.4.5
 ```
 
-These should be installed automatically for you.
+Create a vtests folder one level above your drupal docroot and add the following files in there.
+example `/var/www/devdesktop/nysptracs/vtests/`
 
-
-Create a vtests folder in your docroot and add the following files in there.
-
-
-Here's my actual webdrivercsstest.js
+**webdrivercsstest.js**
 ```javascript
 var assert = require('assert');
 
@@ -329,7 +467,7 @@ require('webdrivercss').init(client, {
 
 client
     .init()
-    .url('http://<SITE-A>.vm.dev')
+    .url('http://nysptracs.dev') // change for the site you're testting for
     .webdrivercss('startpage',[
         {
             name: 'page',
@@ -347,7 +485,7 @@ client
 
 Start the selenium server from within the vagrant ssh session
 $ `sudo /etc/init.d/selenium start`
-$ `cd /var/www/sites/<YOUR SITE FOLDER>/vtests`
+$ `cd /var/www/sites/nysptracs/vtests`
 $ `node webdrivercsstest.js --verbose`
 
 If you get an imagemagick/graphicsmagick error, to fix, you can run:
