@@ -246,6 +246,10 @@ $aliases['nysptracs.vm'] = array(
 Create the following directory and settings.php file for your drupal site
 `sites/<SITE-A>.dev/settings.php`
 
+For the nysptracs site this looks like
+`C:\drupal\sites\nysptracs-dev\docroot\sites\nysptracs.dev\settings.php`
+
+This is what your settings.php should look like:
 ```php
 <?php
 $databases['default']['default'] = array(
@@ -264,7 +268,7 @@ $conf['file_temporary_path'] = '/var/www/drupal-temporary-path';
 
 Rinse & repeat for the other sites.
 
-Here is my settings.php file for nysptracs
+Here is my `settings.php` file for nysptracs
 ```php
 <?php
 $databases['default']['default'] = array(
@@ -280,6 +284,8 @@ $conf['securepages_enable'] = FALSE;
 $conf['file_private_path'] = '/var/www/drupal-private-file-system';
 $conf['file_temporary_path'] = '/var/www/drupal-temporary-path';
 ```
+
+Note, you may want to add the above folder to a `.gitignore` so you're not commiting it remotely. 
 
 ### Update your hosts file
 Edit C:Windows/System32/drivers/etc/hosts
