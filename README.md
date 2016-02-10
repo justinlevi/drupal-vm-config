@@ -203,6 +203,10 @@ Extract them to your $HOME Directory
 
 
 ## Create an alias for each site in a drush folder one level up from the root of each drupal site. 
+
+For the nysptracs site, for me, that path looks like:
+`C:\drupal\sites\nysptracs-dev\drush`
+
 Note, there are different spots you could place your drush alias but this will keep the alias with the site. Unfortunately, this means you will need to run your sql-sync commands from within the docroot.
 `aliases.drushrc.php`
 
