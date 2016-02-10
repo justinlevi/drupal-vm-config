@@ -292,6 +292,15 @@ Edit C:Windows/System32/drivers/etc/hosts
 Add the following line
 `192.168.88.88 vm.dev <SITE-A>.dev <SITE-B>.dev <SITE-C>.dev adminer.vm.dev xhprof.vm.dev pimpmylog.vm.dev`
 
+Note for Windows folks, if you run into a permissions issue, you can try the following steps: 
+```
+Step 1. Open your Windows start menu, search for the notepad application and then right click the notepad icon.
+
+Step 2. Choose “Run as administrator” and then, while inside notepad, browse to folder (/windows/system32/drivers/etc) that contains the hosts file.
+
+You should now be able to edit and save that file in the same folder without any issues. To recap, the trick is that instead of directly opening a protected file in the associated application, you run the application first as an administrator and then open the file inside it.
+```
+
 Here is what my hosts file looks like
 ```
 # localhost name resolution is handled within DNS itself.
