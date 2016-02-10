@@ -294,11 +294,15 @@ Add the following line
 
 Note for Windows folks, if you run into a permissions issue, you can try the following steps: 
 ```
-Step 1. Open your Windows start menu, search for the notepad application and then right click the notepad icon.
+Step 1. Open your Windows start menu, search for the notepad application and then 
+        right click the notepad icon.
 
-Step 2. Choose “Run as administrator” and then, while inside notepad, browse to folder (/windows/system32/drivers/etc) that contains the hosts file.
+Step 2. Choose “Run as administrator” and then, while inside notepad, browse to 
+        the folder (/windows/system32/drivers/etc) that contains the hosts file.
 
-You should now be able to edit and save that file in the same folder without any issues. To recap, the trick is that instead of directly opening a protected file in the associated application, you run the application first as an administrator and then open the file inside it.
+  You should now be able to edit and save that file in the same folder without any issues. 
+  To recap, the trick is that instead of directly opening a protected file in the associated 
+  application, you run the application first as an administrator and then open the file inside it.
 ```
 
 Here is what my hosts file looks like
