@@ -207,15 +207,21 @@ Extract them to your $HOME Directory
 For the nysptracs site, for me, that path looks like:
 `C:\drupal\sites\nysptracs-dev\drush`
 
-Note, there are different spots you could place your drush alias but this will keep the alias with the site. Unfortunately, this means you will need to run your sql-sync commands from within the docroot.
-`aliases.drushrc.php`
+Next, open a terminal and `cd` into the drupal root folder for the site you just added the alias for. Run the command
+`drush sa`
+
+You should see the alias you just created. 
+
+Note, there are different spots you could place your drush alias but creating the alias at the above location will keep the alias with the site. Unfortunately, this means **you will need to run your drush commands from within the docroot for each drupal site**.
+
+Here is the `aliases.drushrc.php`
 
 ```php
 <?php
 $aliases['<SITE-A>.dev'] = array(
   'uri' => '<SITE-A>.dev',
   'root' => '/var/www/devdesktop/<SITE-A>/docroot',
-  'remote-host' => '<SITE-A>.vm.dev',
+  'remote-host' => '<SITE-A>.dev',
   'remote-user' => 'vagrant',
   'ssh-options' => '-o PasswordAuthentication=no -i ~/.vagrant.d/insecure_private_key',
 );
