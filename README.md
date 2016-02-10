@@ -421,6 +421,14 @@ default:
 
 ```
 
+Install Grunt
+`sudo npm install -g grunt-cli`
+
+In progress: (Researching) https://github.com/arithmetric/drupal-testing-framework
+Note* - To install node_modules on the the VM you need to add `--no-bin-links` to your `npm install`
+
+`npm install --no-bin-links`
+
 features/bootstrap/DrupalFeatureContext.php
 ```php
 <?php
