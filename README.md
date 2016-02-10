@@ -133,17 +133,17 @@ vagrant_synced_folders:
 
 
    ```
-  - servername: "<SITE-A>.dev"
+  - servername: "<SITE-A>.vm"
     documentroot: "/var/www/devdesktop/<SITE-A>/docroot"
     extra_parameters: |
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/<SITE-A>/docroot"
 
-  - servername: "<SITE-B>.dev"
+  - servername: "<SITE-B>.vm"
     documentroot: "/var/www/devdesktop/<SITE-A>/docroot"
     extra_parameters: |
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/<SITE-B>/docroot"
 
-  - servername: "<SITE-C>.dev"
+  - servername: "<SITE-C>.vm"
     documentroot: "/var/www/devdesktop/<SITE-A>/docroot"
     extra_parameters: |
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/<SITE-C>/docroot"
@@ -152,22 +152,22 @@ vagrant_synced_folders:
    Here is what it looks like in my config.yml
 ```yaml
 apache_vhosts:
-  - servername: "nysptracs.dev"
+  - servername: "nysptracs.vm"
     documentroot: "/var/www/devdesktop/nysptracs/docroot"
     extra_parameters: |
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/nysptracs/docroot"
 
-  - servername: "nysafeschools.dev"
+  - servername: "nysafeschools.vm"
     documentroot: "/var/www/devdesktop/nysafeschools/docroot"
     extra_parameters: |
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/nysafeschools/docroot"
 
-  - servername: "adminer.vm.dev"
+  - servername: "adminer.vm"
     documentroot: "/opt/adminer"
     extra_parameters: |
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/opt/adminer"
 
-  - servername: "xhprof.vm.dev"
+  - servername: "xhprof.vm"
     documentroot: "/usr/share/php/xhprof_html"
     extra_parameters: |
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/usr/share/php/xhprof_html"
@@ -218,10 +218,10 @@ Here is the `aliases.drushrc.php`
 
 ```php
 <?php
-$aliases['<SITE-A>.dev'] = array(
-  'uri' => '<SITE-A>.dev',
+$aliases['<SITE-A>.vm'] = array(
+  'uri' => '<SITE-A>.vm',
   'root' => '/var/www/devdesktop/<SITE-A>/docroot',
-  'remote-host' => '<SITE-A>.dev',
+  'remote-host' => '<SITE-A>.vm',
   'remote-user' => 'vagrant',
   'ssh-options' => '-o PasswordAuthentication=no -i ~/.vagrant.d/insecure_private_key',
 );
@@ -232,9 +232,9 @@ Here is my alias for nysptracs
 <?php
 
 $aliases['nysptracs.vm'] = array(
-  'uri' => 'nysptracs.dev',
+  'uri' => 'nysptracs.vm',
   'root' => '/var/www/devdesktop/nysptracs/docroot',
-  'remote-host' => 'nysptracs.dev',
+  'remote-host' => 'nysptracs.vm',
   'remote-user' => 'vagrant',
   'ssh-options' => '-o PasswordAuthentication=no -i ~/.vagrant.d/insecure_private_key',
 );
@@ -244,10 +244,10 @@ $aliases['nysptracs.vm'] = array(
 ## Connect to the database
 
 Create the following directory and settings.php file for your drupal site
-`sites/<SITE-A>.dev/settings.php`
+`sites/<SITE-A>.vm/settings.php`
 
 For the nysptracs site this looks like
-`C:\drupal\sites\nysptracs-dev\docroot\sites\nysptracs.dev\settings.php`
+`C:\drupal\sites\nysptracs-dev\docroot\sites\nysptracs.vm\settings.php`
 
 This is what your settings.php should look like:
 ```php
@@ -290,7 +290,7 @@ Note, you may want to add the above folder to a `.gitignore` so you're not commi
 ### Update your hosts file
 Edit C:Windows/System32/drivers/etc/hosts
 Add the following line
-`192.168.88.88 vm.dev <SITE-A>.dev <SITE-B>.dev <SITE-C>.dev adminer.vm.dev xhprof.vm.dev pimpmylog.vm.dev`
+`192.168.88.88 vm.vm <SITE-A>.vm <SITE-B>.vm <SITE-C>.vm adminer.vm xhprof.vm pimpmylog.vm`
 
 Note for Windows folks, if you run into a permissions issue, you can try the following steps: 
 ```
@@ -308,26 +308,26 @@ Step 2. Choose “Run as administrator” and then, while inside notepad, browse
 Here is what my hosts file looks like
 ```
 # localhost name resolution is handled within DNS itself.
-#	127.0.0.1       localhost
-#	::1             localhost
+# 127.0.0.1       localhost
+# ::1             localhost
 127.0.0.1       docroot.dd
-127.0.0.1       nysafeschools.dev.dd
-127.0.0.1       nyspcentennial.dev.dd
-127.0.0.1       nysptracs.dev.dd
-192.168.88.88   nysptracs.dev nysafeschools.dev adminer.vm.dev xhprof.vm.dev pimpmylog.vm.dev
+127.0.0.1       nysafeschools.vm.dd
+127.0.0.1       nyspcentennial.vm.dd
+127.0.0.1       nysptracs.vm.dd
+192.168.88.88   nysptracs.vm nysafeschools.vm adminer.vm xhprof.vm pimpmylog.vm
 ```
 
 ### Create the databases for each site 
 **Only needed if you don't setup the databases in your config file** 
-1. Open a browser and go to the url : http://adminer.vm.dev
+1. Open a browser and go to the url : http://adminer.vm
 2. login with the root/root
 3. Create a database for each site you want to wire up
 
 ## Download the database to your local virtual machine
-$ `drush @YOUR-ACQUIA-REMOTE-ALIAS.dev sql-dump --structure-tables-list="hist*,cache*,*cache,sessions" | drush @<SITE-A>.vm sql-cli`
+$ `drush @YOUR-ACQUIA-REMOTE-ALIAS.vm sql-dump --structure-tables-list="hist*,cache*,*cache,sessions" | drush @<SITE-A>.vm sql-cli`
 
 Here is the drush command for updating my nysptracs database
-$`drush @nysptracs.dev sql-dump --structure-tables-list="hist*,cache*,*cache,sessions" | drush @nysptracs.vm sql-cli`
+$`drush @nysptracs.vm sql-dump --structure-tables-list="hist*,cache*,*cache,sessions" | drush @nysptracs.vm sql-cli`
 
 #OPTIONAL - START
 #Install the Drush registry_rebuild "module"
@@ -339,7 +339,7 @@ clear your drush cache
 $ `drush @<SITE-A>.vm cc drush`
 
 ### Truncate all database tables
-login to the http://adminer.vm.dev and select all of the cache tables, and truncate them.
+login to the http://adminer.vm and select all of the cache tables, and truncate them.
 u: drupal
 p: drupal
 db: drupal
@@ -349,10 +349,10 @@ db: drupal
 #OPTIONAL - END
 
 # Visit your new fancy site @
-http://YOUR-SITE-NAME.dev
+http://YOUR-SITE-NAME.vm
 
 example:
-http://nysptracs.dev
+http://nysptracs.vm
 
 # Rejoice :tada:
 
@@ -387,7 +387,7 @@ default:
         - Drupal\DrupalExtension\Context\DrushContext
   extensions:
     Behat\MinkExtension:
-      base_url: http://nysptracs.dev
+      base_url: http://nysptracs.vm
       files_path: '/var/www/btests/files'
       goutte: ~
       selenium2:
@@ -536,7 +536,7 @@ require('webdrivercss').init(client, {
 
 client
     .init()
-    .url('http://nysptracs.dev') // change for the site you're testting for
+    .url('http://nysptracs.vm') // change for the site you're testting for
     .webdrivercss('startpage',[
         {
             name: 'page',
