@@ -111,27 +111,67 @@ Further down the config.yml file you will see a section for `vagrant_synced_fold
       create: true
 
    ```
+   
+   Here is what it looks like in my config.yml file
+```yaml
+vagrant_synced_folders:
+  # The first synced folder will be used for the default Drupal installation, if
+  # build_makefile: is 'true'.
+  - local_path: C:\drupal\sites\nysptracs-dev
+    destination: /var/www/devdesktop/nysptracs
+    type: nfs
+    create: true
+  
+  - local_path: C:\drupal\sites\nysafeschools-dev
+    destination: /var/www/devdesktop/nysafeschools
+    type: nfs
+    create: true
+```
 
 
    Scroll down a bit further and make the following updates to the apache_vhosts section:
 
 
    ```
-  - servername: "<SITE-A>.vm.dev"
+  - servername: "<SITE-A>.dev"
     documentroot: "/var/www/devdesktop/<SITE-A>/docroot"
     extra_parameters: |
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/<SITE-A>/docroot"
 
-  - servername: "<SITE-B>.vm.dev"
+  - servername: "<SITE-B>.dev"
     documentroot: "/var/www/devdesktop/<SITE-A>/docroot"
     extra_parameters: |
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/<SITE-B>/docroot"
 
-  - servername: "<SITE-C>.vm.dev"
+  - servername: "<SITE-C>.dev"
   documentroot: "/var/www/devdesktop/<SITE-A>/docroot"
   extra_parameters: |
         ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/<SITE-C>/docroot"
    ```
+   
+   Here is what it looks like in my config.yml
+```yaml
+apache_vhosts:
+  - servername: "nysptracs.dev"
+    documentroot: "/var/www/devdesktop/nysptracs/docroot"
+    extra_parameters: |
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/nysptracs/docroot"
+
+  - servername: "nysafeschools.dev"
+    documentroot: "/var/www/devdesktop/nysafeschools/docroot"
+    extra_parameters: |
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/nysafeschools/docroot"
+
+  - servername: "adminer.vm.dev"
+    documentroot: "/opt/adminer"
+    extra_parameters: |
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/opt/adminer"
+
+  - servername: "xhprof.vm.dev"
+    documentroot: "/usr/share/php/xhprof_html"
+    extra_parameters: |
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/usr/share/php/xhprof_html"
+```
 
 
   Note: If you're updating an existing `config.yml` file for an existing VM
@@ -168,8 +208,8 @@ Note, there are different spots you could place your drush alias but this will k
 
 ```php
 <?php
-$aliases['<SITE-A>.vm.dev'] = array(
-  'uri' => '<SITE-A>.vm.dev',
+$aliases['<SITE-A>.dev'] = array(
+  'uri' => '<SITE-A>.dev',
   'root' => '/var/www/devdesktop/<SITE-A>/docroot',
   'remote-host' => '<SITE-A>.vm.dev',
   'remote-user' => 'vagrant',
@@ -181,7 +221,7 @@ Here is my alias for nysptracs
 ```php
 <?php
 
-$aliases['vm.tracs'] = array(
+$aliases['nysptracs.vm'] = array(
   'uri' => 'nysptracs.dev',
   'root' => '/var/www/devdesktop/nysptracs/docroot',
   'remote-host' => 'nysptracs.dev',
@@ -194,7 +234,7 @@ $aliases['vm.tracs'] = array(
 ## Connect to the database
 
 Create the following directory and settings.php file for your drupal site
-`sites/<SITE-A>.vm.dev/settings.php`
+`sites/<SITE-A>.dev/settings.php`
 
 ```php
 <?php
@@ -234,7 +274,7 @@ $conf['file_temporary_path'] = '/var/www/drupal-temporary-path';
 ### Update your hosts file
 Edit C:Windows/System32/drivers/etc/hosts
 Add the following line
-`192.168.88.88 vm.dev <SITE-A>.vm.dev <SITE-B>.vm.dev <SITE-C>.vm.dev adminer.vm.dev xhprof.vm.dev pimpmylog.vm.dev`
+`192.168.88.88 vm.dev <SITE-A>.dev <SITE-B>.dev <SITE-C>.dev adminer.vm.dev xhprof.vm.dev pimpmylog.vm.dev`
 
 Here is what my hosts file looks like
 ```
@@ -255,19 +295,19 @@ Here is what my hosts file looks like
 3. Create a database for each site you want to wire up
 
 ## Download the database to your local virtual machine
-$ `drush @YOUR-ACQUIA-REMOTE-ALIAS.dev sql-dump --structure-tables-list="hist*,cache*,*cache,sessions" | drush @<SITE-A>.vm.dev sql-cli`
+$ `drush @YOUR-ACQUIA-REMOTE-ALIAS.dev sql-dump --structure-tables-list="hist*,cache*,*cache,sessions" | drush @<SITE-A>.vm sql-cli`
 
 Here is the drush command for updating my nysptracs database
-$`drush @nysptracs.dev sql-dump --structure-tables-list="hist*,cache*,*cache,sessions" | drush @vm.tracs sql-cli`
+$`drush @nysptracs.dev sql-dump --structure-tables-list="hist*,cache*,*cache,sessions" | drush @nysptracs.vm sql-cli`
 
 #OPTIONAL - START
 #Install the Drush registry_rebuild "module"
 Note: For Drupal 7 I needed to make sure I had the `drush registry_rebuild` available and it doesn't ship with drush 8. You can install it via:
 
-$ `drush @<SITE-A>.vm.dev dl registry_rebuild`
+$ `drush @<SITE-A>.vm dl registry_rebuild`
 
 clear your drush cache
-$ `drush @<SITE-A>.vm.dev cc drush`
+$ `drush @<SITE-A>.vm cc drush`
 
 ### Truncate all database tables
 login to the http://adminer.vm.dev and select all of the cache tables, and truncate them.
@@ -276,7 +316,7 @@ p: drupal
 db: drupal
 
 ### Rebuild the registry via
-`drush @<SITE-A>.vm.dev rr --fire-bazooka`
+`drush @<SITE-A>.vm rr --fire-bazooka`
 #OPTIONAL - END
 
 # Visit your new fancy site @
