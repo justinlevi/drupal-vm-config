@@ -311,9 +311,9 @@ Here is what my hosts file looks like
 # 127.0.0.1       localhost
 # ::1             localhost
 127.0.0.1       docroot.dd
-127.0.0.1       nysafeschools.vm.dd
-127.0.0.1       nyspcentennial.vm.dd
-127.0.0.1       nysptracs.vm.dd
+127.0.0.1       nysafeschools.dev.dd
+127.0.0.1       nyspcentennial.dev.dd
+127.0.0.1       nysptracs.dev.dd
 192.168.88.88   nysptracs.vm nysafeschools.vm adminer.vm xhprof.vm pimpmylog.vm
 ```
 
