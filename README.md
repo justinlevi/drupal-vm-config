@@ -327,7 +327,7 @@ Here is what my hosts file looks like
 $ `drush @YOUR-ACQUIA-REMOTE-ALIAS.vm sql-dump --structure-tables-list="hist*,cache*,*cache,sessions" | drush @<SITE-A>.vm sql-cli`
 
 Here is the drush command for updating my nysptracs database
-$`drush @nysptracs.vm sql-dump --structure-tables-list="hist*,cache*,*cache,sessions" | drush @nysptracs.vm sql-cli`
+$`drush @nysptracs.dev sql-dump --structure-tables-list="hist*,cache*,*cache,sessions" | drush @nysptracs.vm sql-cli`
 
 #OPTIONAL - START
 #Install the Drush registry_rebuild "module"
