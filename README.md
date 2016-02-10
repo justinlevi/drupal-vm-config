@@ -105,7 +105,7 @@ Further down the config.yml file you will see a section for `vagrant_synced_fold
       type: nfs
       create: true
 
-      - local_path: C:\drupal\sites\<SITE-C>
+    - local_path: C:\drupal\sites\<SITE-C>
       destination: /var/www/<SITE-C>
       type: nfs
       create: true
@@ -144,9 +144,9 @@ vagrant_synced_folders:
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/<SITE-B>/docroot"
 
   - servername: "<SITE-C>.dev"
-  documentroot: "/var/www/devdesktop/<SITE-A>/docroot"
-  extra_parameters: |
-        ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/<SITE-C>/docroot"
+    documentroot: "/var/www/devdesktop/<SITE-A>/docroot"
+    extra_parameters: |
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/<SITE-C>/docroot"
    ```
    
    Here is what it looks like in my config.yml
