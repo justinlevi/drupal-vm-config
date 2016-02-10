@@ -7,7 +7,7 @@ vagrant_synced_folder_default_type: nfs
 
 # If you need to run multiple instances of Drupal VM, set a unique hostname,
 # machine name, and IP address for each instance.
-vagrant_hostname: vm.dev
+vagrant_hostname: local.vm
 vagrant_machine_name: vm
 vagrant_ip: 192.168.88.88
 
@@ -52,7 +52,7 @@ install_site: false
 # is 'true').
 drupal_major_version: 8
 drupal_core_path: "/var/www"
-drupal_domain: "vm.dev"
+drupal_domain: "local.vm"
 drupal_site_name: "Drupal"
 drupal_install_profile: standard
 drupal_enable_modules: [ 'devel' ]
@@ -87,27 +87,27 @@ apache_vhosts:
   #   extra_parameters: |
   #         ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000{{ drupal_core_path }}"
 
-  - servername: "nysptracs.dev"
+  - servername: "nysptracs.vm"
     documentroot: "/var/www/devdesktop/nysptracs/docroot"
     extra_parameters: |
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/nysptracs/docroot"
 
-  - servername: "nysafeschools.dev"
+  - servername: "nysafeschools.vm"
     documentroot: "/var/www/devdesktop/nysafeschools/docroot"
     extra_parameters: |
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/nysafeschools/docroot"
 
-  - servername: "adminer.vm.dev"
+  - servername: "adminer.vm"
     documentroot: "/opt/adminer"
     extra_parameters: |
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/opt/adminer"
 
-  - servername: "xhprof.vm.dev"
+  - servername: "xhprof.vm"
     documentroot: "/usr/share/php/xhprof_html"
     extra_parameters: |
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/usr/share/php/xhprof_html"
 
-  - servername: "pimpmylog.vm.dev"
+  - servername: "pimpmylog.vm"
     documentroot: "/usr/share/php/pimpmylog"
     extra_parameters: |
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/usr/share/php/pimpmylog"
@@ -128,15 +128,15 @@ nginx_hosts:
     root: "{{ drupal_core_path }}"
     is_php: true
 
-  - server_name: "adminer.vm.dev"
+  - server_name: "adminer.vm"
     root: "/opt/adminer"
     is_php: true
 
-  - server_name: "xhprof.vm.dev"
+  - server_name: "xhprof.vm"
     root: "/usr/share/php/xhprof_html"
     is_php: true
 
-  - server_name: "pimpmylog.vm.dev"
+  - server_name: "pimpmylog.vm"
     root: "/usr/share/php/pimpmylog"
     is_php: true
 
@@ -192,6 +192,7 @@ nodejs_npm_global_packages:
   - { name: phantomjs, version: 1.9.8 }
   - { name: webdriverio, version: 2.4.5 }
   - { name: phantomcss }
+  - { name: jquery }
 
 # `ruby` must be in installed_extras for this to work.
 ruby_install_gems_user: "{{ vagrant_user }}"
