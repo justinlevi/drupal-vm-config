@@ -33,7 +33,7 @@ vagrant_synced_folders:
     create: true
 
 # Memory and CPU to use for this VM.
-vagrant_memory: 4096
+vagrant_memory: 2048
 vagrant_cpus: 2
 
 # The web server software to use. Can be either 'apache' or 'nginx'.
@@ -177,7 +177,7 @@ installed_extras:
   - selenium
   # - solr
   # - varnish
-  - xdebug
+  # - xdebug
   - xhprof
 
 # Add any extra apt or yum packages you would like installed.
@@ -188,11 +188,13 @@ extra_packages:
 
 # `nodejs` must be in installed_extras for this to work.
 nodejs_version: "0.12"
-nodejs_npm_global_packages:
-  - { name: phantomjs, version: 1.9.8 }
-  - { name: webdriverio, version: 2.4.5 }
-  - { name: phantomcss }
-  - { name: jquery }
+nodejs_npm_global_packages: []
+  # This does not work as expected. Installs under sudo and not under the vagrant user.
+  # Means that you need to install each of these manually
+  # - { name: phantomjs, version: 1.9.8 }
+  # - { name: webdriverio, version: 2.4.5 }
+  # - { name: phantomcss }
+  # - { name: jquery }
 
 # `ruby` must be in installed_extras for this to work.
 ruby_install_gems_user: "{{ vagrant_user }}"
@@ -221,10 +223,10 @@ firewall_log_dropped_packets: false
 
 # PHP Configuration. Currently-supported versions: 5.5, 5.6, 7.0.
 php_version: "5.6"
-php_memory_limit: "1024M"
+php_memory_limit: "256M"
 php_display_errors: "On"
 php_display_startup_errors: "On"
-php_realpath_cache_size: "1024K"
+php_realpath_cache_size: "2048K"
 php_sendmail_path: "/usr/sbin/ssmtp -t"
 php_opcache_enabled_in_ini: true
 php_opcache_memory_consumption: "256"
@@ -270,11 +272,11 @@ pimpmylog_install_dir: /usr/share/php/pimpmylog
 pimpmylog_grant_all_privs: true
 
 # XDebug configuration. XDebug is disabled by default for better performance.
-php_xdebug_default_enable: 1
-php_xdebug_coverage_enable: 1
-php_xdebug_cli_enable: 1
-php_xdebug_remote_enable: 1
-php_xdebug_remote_connect_back: 1
+php_xdebug_default_enable: 0
+php_xdebug_coverage_enable: 0
+php_xdebug_cli_enable: 0
+php_xdebug_remote_enable: 0
+php_xdebug_remote_connect_back: 0
 # Use PHPSTORM for PHPStorm, sublime.xdebug for Sublime Text.
 php_xdebug_idekey: PHPSTORM
 php_xdebug_max_nesting_level: 256
