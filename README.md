@@ -118,12 +118,12 @@ vagrant_synced_folders:
   # The first synced folder will be used for the default Drupal installation, if
   # build_makefile: is 'true'.
   - local_path: C:\drupal\sites\nysptracs-dev
-    destination: /var/www/devdesktop/nysptracs
+    destination: /var/www/nysptracs
     type: nfs
     create: true
   
   - local_path: C:\drupal\sites\nysafeschools-dev
-    destination: /var/www/devdesktop/nysafeschools
+    destination: /var/www/nysafeschools
     type: nfs
     create: true
 ```
@@ -134,33 +134,33 @@ vagrant_synced_folders:
 
    ```
   - servername: "<SITE-A>.vm"
-    documentroot: "/var/www/devdesktop/<SITE-A>/docroot"
+    documentroot: "/var/www/<SITE-A>/docroot"
     extra_parameters: |
-          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/<SITE-A>/docroot"
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/<SITE-A>/docroot"
 
   - servername: "<SITE-B>.vm"
-    documentroot: "/var/www/devdesktop/<SITE-A>/docroot"
+    documentroot: "/var/www/<SITE-A>/docroot"
     extra_parameters: |
-          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/<SITE-B>/docroot"
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/<SITE-B>/docroot"
 
   - servername: "<SITE-C>.vm"
-    documentroot: "/var/www/devdesktop/<SITE-A>/docroot"
+    documentroot: "/var/www/<SITE-A>/docroot"
     extra_parameters: |
-          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/<SITE-C>/docroot"
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/<SITE-C>/docroot"
    ```
    
    Here is what it looks like in my config.yml
 ```yaml
 apache_vhosts:
   - servername: "nysptracs.vm"
-    documentroot: "/var/www/devdesktop/nysptracs/docroot"
+    documentroot: "/var/www/nysptracs/docroot"
     extra_parameters: |
-          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/nysptracs/docroot"
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/nysptracs/docroot"
 
   - servername: "nysafeschools.vm"
-    documentroot: "/var/www/devdesktop/nysafeschools/docroot"
+    documentroot: "/var/www/nysafeschools/docroot"
     extra_parameters: |
-          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/nysafeschools/docroot"
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/nysafeschools/docroot"
 
   - servername: "adminer.vm"
     documentroot: "/opt/adminer"
@@ -220,7 +220,7 @@ Here is the `aliases.drushrc.php`
 <?php
 $aliases['<SITE-A>.vm'] = array(
   'uri' => '<SITE-A>.vm',
-  'root' => '/var/www/devdesktop/<SITE-A>/docroot',
+  'root' => '/var/www/<SITE-A>/docroot',
   'remote-host' => '<SITE-A>.vm',
   'remote-user' => 'vagrant',
   'ssh-options' => '-o PasswordAuthentication=no -i ~/.vagrant.d/insecure_private_key',
@@ -233,7 +233,7 @@ Here is my alias for nysptracs
 
 $aliases['nysptracs.vm'] = array(
   'uri' => 'nysptracs.vm',
-  'root' => '/var/www/devdesktop/nysptracs/docroot',
+  'root' => '/var/www/nysptracs/docroot',
   'remote-host' => 'nysptracs.vm',
   'remote-user' => 'vagrant',
   'ssh-options' => '-o PasswordAuthentication=no -i ~/.vagrant.d/insecure_private_key',
@@ -368,7 +368,7 @@ ssh into the vagrant box
 $ `ssh vagrant`
 
 Create a btests folder one level above your drupal docroot and add the following files in there.
-example `/var/www/devdesktop/nysptracs/btests/`
+example `/var/www/nysptracs/btests/`
 
 **behat.yml**
 ```yaml
@@ -398,7 +398,7 @@ default:
       drush:
         alias: 'local'
       drupal:
-        drupal_root: '/var/www/devdesktop/nysptracs/docroot'
+        drupal_root: '/var/www/nysptracs/docroot'
       region_map:
         header: "#header"
         logo:  "#logo"
@@ -529,7 +529,7 @@ $ `npm list -g --depth=0`
 ```
 
 Create a vtests folder one level above your drupal docroot and add the following files in there.
-example `/var/www/devdesktop/nysptracs/vtests/`
+example `/var/www/nysptracs/vtests/`
 
 **webdrivercsstest.js**
 ```javascript
