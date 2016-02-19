@@ -22,13 +22,18 @@ vagrant_public_ip: ""
 vagrant_synced_folders:
   # The first synced folder will be used for the default Drupal installation, if
   # build_makefile: is 'true'.
+  - local_path: C:\drupal\sites\d8
+    destination: /var/www/d8
+    type: nfs
+    create: true
+
   - local_path: C:\drupal\sites\nysptracs-dev
-    destination: /var/www/devdesktop/nysptracs
+    destination: /var/www/nysptracs
     type: nfs
     create: true
 
   - local_path: C:\drupal\sites\nysafeschools-dev
-    destination: /var/www/devdesktop/nysafeschools
+    destination: /var/www/nysafeschools
     type: nfs
     create: true
 
@@ -87,15 +92,20 @@ apache_vhosts:
   #   extra_parameters: |
   #         ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000{{ drupal_core_path }}"
 
-  - servername: "nysptracs.vm"
-    documentroot: "/var/www/devdesktop/nysptracs/docroot"
+  - servername: "d8.vm"
+    documentroot: "/var/www/d8/docroot"
     extra_parameters: |
-          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/nysptracs/docroot"
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/d8/docroot"
+
+  - servername: "nysptracs.vm"
+    documentroot: "/var/www/nysptracs/docroot"
+    extra_parameters: |
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/nysptracs/docroot"
 
   - servername: "nysafeschools.vm"
-    documentroot: "/var/www/devdesktop/nysafeschools/docroot"
+    documentroot: "/var/www/nysafeschools/docroot"
     extra_parameters: |
-          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/nysafeschools/docroot"
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/nysafeschools/docroot"
 
   - servername: "adminer.vm"
     documentroot: "/opt/adminer"
@@ -243,11 +253,11 @@ composer_path: /usr/bin/composer
 composer_home_path: '/home/vagrant/.composer'
 composer_global_packages:
 - { name: drupal/drupal-extension, release: '*' }
+- { name: phpunit/phpunit, release: '@stable' }
 # - { name: behat/mink, release: '1.5.*@stable' }
 # - { name: behat/mink-goutte-driver, release: '*' }
 # - { name: behat/mink-selenium2-driver, release: '*' }
-
-  # - { name: phpunit/phpunit, release: '@stable' }
+# - { name: phpunit/phpunit, release: '@stable' }
 
 # Run specified scripts after VM is provisioned. Path is relative to the
 # `provisioning/playbook.yml` file.
