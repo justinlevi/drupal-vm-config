@@ -7,7 +7,7 @@ vagrant_synced_folder_default_type: nfs
 
 # If you need to run multiple instances of Drupal VM, set a unique hostname,
 # machine name, and IP address for each instance.
-vagrant_hostname: vm.dev
+vagrant_hostname: local.vm
 vagrant_machine_name: vm
 vagrant_ip: 192.168.88.88
 
@@ -20,18 +20,18 @@ vagrant_public_ip: ""
 # a 'type' of [nfs|rsync|smb] (leave empty for slow native shares). See
 # http://docs.drupalvm.com/en/latest/extras/syncing-folders/ for more info.
 vagrant_synced_folders:
-  - local_path: ~/Sites/devdesktop/<SITE-A>-dev
-    destination: /var/www/devdesktop/<SITE-A>
+  - local_path: ~/Sites/d8
+    destination: /var/www/nysptracs
     type: nfs
     create: true
 
-  - local_path: ~/Sites/devdesktop/<SITE-B>-dev
-    destination: /var/www/devdesktop/<SITE-B>
+  - local_path: ~/Sites/nysafeschools-dev
+    destination: /var/www/nysafeschools
     type: nfs
     create: true
 
 # Memory and CPU to use for this VM.
-vagrant_memory: 4096
+vagrant_memory: 2048
 vagrant_cpus: 2
 
 # The web server software to use. Can be either 'apache' or 'nginx'.
@@ -49,8 +49,8 @@ install_site: false
 # Settings for building a Drupal site from a makefile (if 'build_makefile:'
 # is 'true').
 drupal_major_version: 8
-drupal_core_path: "/var/www/blank"
-drupal_domain: "vm.dev"
+drupal_core_path: "/var/www"
+drupal_domain: "local.vm"
 drupal_site_name: "Drupal"
 drupal_install_profile: standard
 drupal_enable_modules: [ 'devel' ]
@@ -80,27 +80,37 @@ configure_local_drush_aliases: true
 # multisite deployments, you can point multiple servernames at one documentroot.
 # View the geerlingguy.apache Ansible Role README for more options.
 apache_vhosts:
-  - servername: "<SITE-A>.vm.dev"
-    documentroot: "/var/www/devdesktop/<SITE-A>"
-    extra_parameters: |
-          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/<SITE-A>/docroot"
+  # - servername: "{{ drupal_domain }}"
+  #   documentroot: "{{ drupal_core_path }}"
+  #   extra_parameters: |
+  #         ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000{{ drupal_core_path }}"
 
-  - servername: "<SITE-B>.vm.dev"
-    documentroot: "/var/www/devdesktop/<SITE-B>"
+  - servername: "d8.vm"
+    documentroot: "/var/www/d8/docroot"
     extra_parameters: |
-          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/devdesktop/<SITE-B>/docroot"
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/d8/docroot"
 
-  - servername: "adminer.vm.dev"
+  - servername: "nysptracs.vm"
+    documentroot: "/var/www/nysptracs/docroot"
+    extra_parameters: |
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/nysptracs/docroot"
+
+  - servername: "nysafeschools.vm"
+    documentroot: "/var/www/nysafeschools/docroot"
+    extra_parameters: |
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/nysafeschools/docroot"
+
+  - servername: "adminer.vm"
     documentroot: "/opt/adminer"
     extra_parameters: |
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/opt/adminer"
 
-  - servername: "xhprof.vm.dev"
+  - servername: "xhprof.vm"
     documentroot: "/usr/share/php/xhprof_html"
     extra_parameters: |
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/usr/share/php/xhprof_html"
 
-  - servername: "pimpmylog.vm.dev"
+  - servername: "pimpmylog.vm"
     documentroot: "/usr/share/php/pimpmylog"
     extra_parameters: |
           ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/usr/share/php/pimpmylog"
@@ -113,6 +123,27 @@ apache_mods_enabled:
   - proxy.load
   - proxy_fcgi.load
 
+# Nginx hosts. Each site will get a server entry using the configuration defined
+# here. Set the 'is_php' property for document roots that contain PHP apps like
+# Drupal.
+nginx_hosts:
+  - server_name: "{{ drupal_domain }}"
+    root: "{{ drupal_core_path }}"
+    is_php: true
+
+  - server_name: "adminer.vm"
+    root: "/opt/adminer"
+    is_php: true
+
+  - server_name: "xhprof.vm"
+    root: "/usr/share/php/xhprof_html"
+    is_php: true
+
+  - server_name: "pimpmylog.vm"
+    root: "/usr/share/php/pimpmylog"
+    is_php: true
+
+nginx_remove_default_vhost: true
 
 # MySQL Databases and users. If build_makefile: is true, first database will
 # be used for the makefile-built site.
@@ -121,13 +152,11 @@ mysql_databases:
     encoding: utf8
     collation: utf8_general_ci
 
-mysql_databases:
-  - name: "<SITE-A>"
+  - name: "nysptracs"
     encoding: utf8
     collation: utf8_general_ci
 
-mysql_databases:
-  - name: "<SITE-B>"
+  - name: "nysafeschools"
     encoding: utf8
     collation: utf8_general_ci
 
@@ -142,7 +171,7 @@ mysql_users:
 installed_extras:
   - adminer
   - drupalconsole
-  - mailhog
+  # - mailhog
   - memcached
   - nodejs
   - pimpmylog
@@ -150,8 +179,8 @@ installed_extras:
   - ruby
   - selenium
   # - solr
-  - varnish
-  - xdebug
+  # - varnish
+  # - xdebug
   - xhprof
 
 # Add any extra apt or yum packages you would like installed.
@@ -162,10 +191,13 @@ extra_packages:
 
 # `nodejs` must be in installed_extras for this to work.
 nodejs_version: "0.12"
-nodejs_npm_global_packages:
-  - { name: phantomjs, version: 1.9.8 }
-  - { name: webdriverio, version: 2.4.5 }
-  - { name: phantomcss }
+nodejs_npm_global_packages: []
+  # This does not work as expected. Installs under sudo and not under the vagrant user.
+  # Means that you need to install each of these manually
+  # - { name: phantomjs, version: 1.9.8 }
+  # - { name: webdriverio, version: 2.4.5 }
+  # - { name: phantomcss }
+  # - { name: jquery }
 
 # `ruby` must be in installed_extras for this to work.
 ruby_install_gems_user: "{{ vagrant_user }}"
@@ -213,11 +245,12 @@ php_fpm_listen: "127.0.0.1:9000"
 composer_path: /usr/bin/composer
 composer_home_path: '/home/vagrant/.composer'
 composer_global_packages:
-  - { name: behat/mink, release: '1.5.*@stable' }
-  - { name: behat/mink-goutte-driver, release: '*' }
-  - { name: behat/mink-selenium2-driver, release: '*' }
-  - { name: drupal/drupal-extension, release: '3.*' }
-#   - { name: phpunit/phpunit, release: '@stable' }
+- { name: drupal/drupal-extension, release: '*' }
+- { name: phpunit/phpunit, release: '@stable' }
+# - { name: behat/mink, release: '1.5.*@stable' }
+# - { name: behat/mink-goutte-driver, release: '*' }
+# - { name: behat/mink-selenium2-driver, release: '*' }
+# - { name: phpunit/phpunit, release: '@stable' }
 
 # Run specified scripts after VM is provisioned. Path is relative to the
 # `provisioning/playbook.yml` file.
@@ -242,11 +275,11 @@ pimpmylog_install_dir: /usr/share/php/pimpmylog
 pimpmylog_grant_all_privs: true
 
 # XDebug configuration. XDebug is disabled by default for better performance.
-php_xdebug_default_enable: 1
-php_xdebug_coverage_enable: 1
-php_xdebug_cli_enable: 1
-php_xdebug_remote_enable: 1
-php_xdebug_remote_connect_back: 1
+php_xdebug_default_enable: 0
+php_xdebug_coverage_enable: 0
+php_xdebug_cli_enable: 0
+php_xdebug_remote_enable: 0
+php_xdebug_remote_connect_back: 0
 # Use PHPSTORM for PHPStorm, sublime.xdebug for Sublime Text.
 php_xdebug_idekey: PHPSTORM
 php_xdebug_max_nesting_level: 256
