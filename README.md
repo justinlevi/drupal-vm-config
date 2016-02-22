@@ -39,7 +39,7 @@ Below are three solutions that worked for me. YMMV
 - 1. Run this from git bash
 eval `ssh-agent -s`
 ssh-add
-Note: You can use the above command to indicate whether or not your ssh-agent is setup and running too.
+Note: You can use the above command to indicate whether or not your ssh-agent is setup and running. If you don't get an error when your run $ _ssh-agent_ then I believe everything should be working. 
 
 or
 
