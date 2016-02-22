@@ -36,20 +36,20 @@ Below are three solutions that worked for me. YMMV
 
 ### \#3 below is my personal fav because it fires when I open Cmder
 
-- 1. Run this from git bash
+**1. Run this from git bash**
 eval `ssh-agent -s`
 ssh-add
 Note: You can use the above command to indicate whether or not your ssh-agent is setup and running. If you don't get an error when your run $ _ssh-agent_ then I believe everything should be working. 
 
 or
 
-- 2. "C:\Program Files (x86)\Git\cmd\start-ssh-agent.cmd"
+**2. "C:\Program Files (x86)\Git\cmd\start-ssh-agent.cmd"**
 from the Command Prompt
 
 or
 
 If you're using Cmder, do this:
-- 3. https://github.com/cmderdev/cmder/issues/193#issuecomment-63041617
+**3. https://github.com/cmderdev/cmder/issues/193#issuecomment-63041617**
 
 ### WINDOWS USERS - [END]
 
