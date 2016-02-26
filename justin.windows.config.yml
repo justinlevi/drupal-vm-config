@@ -20,14 +20,7 @@ vagrant_public_ip: ""
 # a 'type' of [nfs|rsync|smb] (leave empty for slow native shares). See
 # http://docs.drupalvm.com/en/latest/extras/syncing-folders/ for more info.
 vagrant_synced_folders:
-  # The first synced folder will be used for the default Drupal installation, if
-  # build_makefile: is 'true'.
   - local_path: C:\drupal\sites\d8
-    destination: /var/www/d8
-    type: nfs
-    create: true
-
-  - local_path: C:\drupal\sites\nysptracs-dev
     destination: /var/www/nysptracs
     type: nfs
     create: true
