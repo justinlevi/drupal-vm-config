@@ -187,7 +187,7 @@ installed_extras:
   - selenium
   # - solr
   # - varnish
-  # - xdebug
+  - xdebug
   - xhprof
 
 # Add any extra apt or yum packages you would like installed.
@@ -282,11 +282,11 @@ pimpmylog_install_dir: /usr/share/php/pimpmylog
 pimpmylog_grant_all_privs: true
 
 # XDebug configuration. XDebug is disabled by default for better performance.
-php_xdebug_default_enable: 0
-php_xdebug_coverage_enable: 0
-php_xdebug_cli_enable: 0
-php_xdebug_remote_enable: 0
-php_xdebug_remote_connect_back: 0
+php_xdebug_default_enable: 1
+php_xdebug_coverage_enable: 1
+php_xdebug_cli_enable: 1
+php_xdebug_remote_enable: 1
+php_xdebug_remote_connect_back: 1
 # Use PHPSTORM for PHPStorm, sublime.xdebug for Sublime Text.
 php_xdebug_idekey: PHPSTORM
 php_xdebug_max_nesting_level: 256
