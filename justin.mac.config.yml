@@ -7,7 +7,7 @@ vagrant_synced_folder_default_type: nfs
 
 # If you need to run multiple instances of Drupal VM, set a unique hostname,
 # machine name, and IP address for each instance.
-vagrant_hostname: local.vm
+vagrant_hostname: vm
 vagrant_machine_name: vm
 vagrant_ip: 192.168.88.88
 
@@ -21,12 +21,17 @@ vagrant_public_ip: ""
 # http://docs.drupalvm.com/en/latest/extras/syncing-folders/ for more info.
 vagrant_synced_folders:
   - local_path: ~/Sites/d8
-    destination: /var/www/nysptracs
+    destination: /var/www/d8
     type: nfs
     create: true
 
-  - local_path: ~/Sites/nysafeschools-dev
+  - local_path: ~/Sites/devdesktop/nysafeschools-dev
     destination: /var/www/nysafeschools
+    type: nfs
+    create: true
+
+  - local_path: ~/Sites/devdesktop/nysptracs-dev
+    destination: /var/www/nysptracs
     type: nfs
     create: true
 
@@ -254,6 +259,7 @@ composer_home_path: '/home/vagrant/.composer'
 composer_global_packages:
 - { name: drupal/drupal-extension, release: '*' }
 - { name: phpunit/phpunit, release: '@stable' }
+- { name: guzzlehttp/guzzle, release: '^6.0@dev' }
 # - { name: behat/mink, release: '1.5.*@stable' }
 # - { name: behat/mink-goutte-driver, release: '*' }
 # - { name: behat/mink-selenium2-driver, release: '*' }
