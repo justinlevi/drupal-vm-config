@@ -260,6 +260,7 @@ composer_global_packages:
 - { name: drupal/drupal-extension, release: '*' }
 - { name: phpunit/phpunit, release: '@stable' }
 - { name: guzzlehttp/guzzle, release: '^6.0@dev' }
+- { name: behatch/contexts, release: '*' }
 # - { name: behat/mink, release: '1.5.*@stable' }
 # - { name: behat/mink-goutte-driver, release: '*' }
 # - { name: behat/mink-selenium2-driver, release: '*' }
