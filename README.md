@@ -331,7 +331,7 @@ Here is the drush command for updating my nysptracs database
 $`drush @nysptracs.dev sql-dump --structure-tables-list="hist*,cache*,*cache,sessions" | drush @nysptracs.vm sql-cli`
 
 Here is the command I run immediately after to disable `securepages` and enable `stage_file_proxy`
-$ `drush @nysptracs.vm dis securepages && drush @nysptracs.vm en -y stage_file_proxy`
+$ `drush @nysptracs.vm dis -y securepages && drush @nysptracs.vm en -y stage_file_proxy`
 
 #OPTIONAL - START
 #Install the Drush registry_rebuild "module"
