@@ -164,6 +164,10 @@ mysql_databases:
     encoding: utf8
     collation: utf8_general_ci
 
+  - name: "d8"
+    encoding: utf8
+    collation: utf8_general_ci
+
   - name: "nysptracs"
     encoding: utf8
     collation: utf8_general_ci
@@ -257,9 +261,10 @@ php_fpm_listen: "127.0.0.1:9000"
 
 composer_path: /usr/bin/composer
 composer_home_path: '/home/vagrant/.composer'
-composer_global_packages:
-- { name: drupal/drupal-extension, release: '*' }
-- { name: phpunit/phpunit, release: '@stable' }
+composer_global_packages: []
+# - { name: drupal/drupal-extension, release: '*' }
+# - { name: phpunit/phpunit, release: '@stable' }
+# - { name: behatch/contexts, release: '*' }
 # - { name: behat/mink, release: '1.5.*@stable' }
 # - { name: behat/mink-goutte-driver, release: '*' }
 # - { name: behat/mink-selenium2-driver, release: '*' }
@@ -308,3 +313,5 @@ selenium_version: 2.46.0
 # Other configuration.
 dashboard_install_dir: /var/www/dashboard
 known_hosts_path: ~/.ssh/known_hosts
+
+selenium_install_firefox: "true"
