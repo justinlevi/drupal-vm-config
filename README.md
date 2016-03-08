@@ -330,6 +330,9 @@ $ `drush @YOUR-ACQUIA-REMOTE-ALIAS.vm sql-dump --structure-tables-list="hist*,ca
 Here is the drush command for updating my nysptracs database
 $`drush @nysptracs.dev sql-dump --structure-tables-list="hist*,cache*,*cache,sessions" | drush @nysptracs.vm sql-cli`
 
+Here is the command I run immediately after to disable `securepages` and enable `stage_file_proxy`
+$ `drush @nysptracs.vm dis -y securepages && drush @nysptracs.vm en -y stage_file_proxy`
+
 #OPTIONAL - START
 #Install the Drush registry_rebuild "module"
 Note: For Drupal 7 I needed to make sure I had the `drush registry_rebuild` available and it doesn't ship with drush 8. You can install it via:
