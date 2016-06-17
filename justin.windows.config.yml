@@ -1,14 +1,14 @@
 ---
 # `vagrant_box` can also be set to geerlingguy/centos6, geerlingguy/centos7,
-# geerlingguy/ubuntu1204, parallels/ubuntu-14.04, etc.
+# geerlingguy/ubuntu1404, geerlingguy/ubuntu1204, parallels/ubuntu-14.04, etc.
 vagrant_box: geerlingguy/ubuntu1404
 vagrant_user: vagrant
 vagrant_synced_folder_default_type: nfs
 
 # If you need to run multiple instances of Drupal VM, set a unique hostname,
 # machine name, and IP address for each instance.
-vagrant_hostname: vm
-vagrant_machine_name: vm
+vagrant_hostname: data.vm
+vagrant_machine_name: data
 vagrant_ip: 192.168.88.88
 
 # Allow Drupal VM to be accessed via a public network interface on your host.
@@ -20,23 +20,15 @@ vagrant_public_ip: ""
 # a 'type' of [nfs|rsync|smb] (leave empty for slow native shares). See
 # http://docs.drupalvm.com/en/latest/extras/syncing-folders/ for more info.
 vagrant_synced_folders:
-  - local_path: C:\drupal\sites\d8
-    destination: /var/www/d8
-    type: nfs
-    create: true
-
-  - local_path: C:\drupal\sites\nysptracs-dev
-    destination: /var/www/nysptracs
-    type: nfs
-    create: true
-
-  - local_path: C:\drupal\sites\nysafeschools-dev
-    destination: /var/www/nysafeschools
+  # The first synced folder will be used for the default Drupal installation, if
+  # build_makefile: is 'true'.
+  - local_path: ../
+    destination: /var/www/data
     type: nfs
     create: true
 
 # Memory and CPU to use for this VM.
-vagrant_memory: 2048
+vagrant_memory: 1024
 vagrant_cpus: 2
 
 # The web server software to use. Can be either 'apache' or 'nginx'.
@@ -45,7 +37,7 @@ drupalvm_webserver: apache
 # Set this to false if you are using a different site deployment strategy and
 # would like to configure 'vagrant_synced_folders' and 'apache_vhosts' manually.
 build_makefile: false
-drush_makefile_path: /vagrant/drupal.make.yml
+drush_makefile_path: "{{ config_dir }}/drupal.make.yml"
 
 # Set this to false if you don't need to install drupal (using the drupal_*
 # settings below), but instead copy down a database (e.g. using drush sql-sync).
@@ -54,22 +46,22 @@ install_site: false
 # Settings for building a Drupal site from a makefile (if 'build_makefile:'
 # is 'true').
 drupal_major_version: 8
-drupal_core_path: "/var/www"
-drupal_domain: "local.vm"
+drupal_core_path: "/var/www/data/docroot"
+drupal_domain: "{{ vagrant_hostname }}"
 drupal_site_name: "Drupal"
 drupal_install_profile: standard
 drupal_enable_modules: [ 'devel' ]
 drupal_account_name: admin
 drupal_account_pass: admin
-drupal_mysql_user: drupal
-drupal_mysql_password: drupal
-drupal_mysql_database: drupal
+drupal_mysql_user: bolt
+drupal_mysql_password: bolt
+drupal_mysql_database: bolt
 
 # Additional arguments or options to pass to `drush site-install`.
 drupal_site_install_extra_args: []
 
-# Cron jobs are added to the root user's crontab. Keys include name (required),
-# minute, hour, day, weekday, month, job (required), and state.
+# Cron jobs are added to the vagrant user's crontab. Keys include name
+# (required), minute, hour, day, weekday, month, job (required), and state.
 drupalvm_cron_jobs: []
   # - {
   #   name: "Drupal Cron",
@@ -85,25 +77,10 @@ configure_local_drush_aliases: true
 # multisite deployments, you can point multiple servernames at one documentroot.
 # View the geerlingguy.apache Ansible Role README for more options.
 apache_vhosts:
-  # - servername: "{{ drupal_domain }}"
-  #   documentroot: "{{ drupal_core_path }}"
-  #   extra_parameters: |
-  #         ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000{{ drupal_core_path }}"
-
-  - servername: "d8.vm"
-    documentroot: "/var/www/d8/docroot"
+  - servername: "{{ drupal_domain }}"
+    documentroot: "{{ drupal_core_path }}"
     extra_parameters: |
-          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/d8/docroot"
-
-  - servername: "nysptracs.vm"
-    documentroot: "/var/www/nysptracs/docroot"
-    extra_parameters: |
-          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/nysptracs/docroot"
-
-  - servername: "nysafeschools.vm"
-    documentroot: "/var/www/nysafeschools/docroot"
-    extra_parameters: |
-          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/var/www/nysafeschools/docroot"
+          ProxyPassMatch ^/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000{{ drupal_core_path }}"
 
   - servername: "adminer.{{ vagrant_hostname }}"
     documentroot: "{{ adminer_install_dir }}"
@@ -156,23 +133,12 @@ nginx_hosts:
     root: "{{ dashboard_install_dir }}"
 
 nginx_remove_default_vhost: true
+nginx_ppa_use: true
 
 # MySQL Databases and users. If build_makefile: is true, first database will
 # be used for the makefile-built site.
 mysql_databases:
   - name: "{{ drupal_mysql_database }}"
-    encoding: utf8
-    collation: utf8_general_ci
-
-  - name: "d8"
-    encoding: utf8
-    collation: utf8_general_ci
-
-  - name: "nysptracs"
-    encoding: utf8
-    collation: utf8_general_ci
-
-  - name: "nysafeschools"
     encoding: utf8
     collation: utf8_general_ci
 
@@ -186,38 +152,36 @@ mysql_users:
 # to install *any* extras, make set this value to an empty set, e.g. `[]`.
 installed_extras:
   - adminer
+  # - blackfire
   - drupalconsole
   # - mailhog
   - memcached
+  # - newrelic
   - nodejs
-  - pimpmylog
+  # - pimpmylog
   # - redis
-  - ruby
+  # - ruby
   - selenium
   # - solr
   # - varnish
-  - xdebug
+  # - xdebug
   - xhprof
 
 # Add any extra apt or yum packages you would like installed.
 extra_packages:
-  - unzip
-  - graphicsmagick
-  - graphicsmagick-imagemagick-compat
+- sqlite
+- graphicsmagick-imagemagick-compat
+- graphicsmagick
 
-# `nodejs` must be in installed_extras for this to work.
+# `nodejs` must be in installed_extras for this to work. Valid examples: "0.10",
 # "0.12", "4.x", "5.x".
 nodejs_version: "0.12"
 nodejs_npm_global_packages: []
-  # This does not work as expected. Installs under sudo and not under the vagrant user.
-  # Means that you need to install each of these manually
-  # - { name: phantomjs, version: 1.9.8 }
-  # - { name: webdriverio, version: 2.4.5 }
-  # - { name: phantomcss }
-  # - { name: jquery }
+
+nodejs_install_npm_user: "{{ drupalvm_user }}"
 
 # `ruby` must be in installed_extras for this to work.
-ruby_install_gems_user: "{{ vagrant_user }}"
+ruby_install_gems_user: "{{ drupalvm_user }}"
 ruby_install_gems: []
 
 # You can configure almost anything else on the server in the rest of this file.
@@ -238,40 +202,70 @@ firewall_allowed_tcp_ports:
   - "8080"
   - "8443"
   - "8983"
-  - "7055"
 firewall_log_dropped_packets: false
 
-# PHP Configuration. Currently-supported versions: 5.5, 5.6, 7.0.
+# PHP Configuration. Currently-supported versions: 5.6, 7.0.
+# To use 5.6, see: http://docs.drupalvm.com/en/latest/other/php-56/
+# php_version: "7.0"
 php_version: "5.6"
+php_packages:
+  - php5
+  - php5-apcu
+  - php5-mcrypt
+  - php5-cli
+  - php5-common
+  - php5-curl
+  - php5-dev
+  - php5-fpm
+  - php5-gd
+  - php5-xsl
+  - php5-sqlite
+  - php-pear
+  - libpcre3-dev
+php_conf_paths:
+  - /etc/php5/fpm
+  - /etc/php5/apache2
+  - /etc/php5/cli
+php_extension_conf_paths:
+  - /etc/php5/fpm/conf.d
+  - /etc/php5/apache2/conf.d
+  - /etc/php5/cli/conf.d
+php_fpm_daemon: php5-fpm
+php_fpm_conf_path: "/etc/php5/fpm"
+php_fpm_pool_conf_path: "/etc/php5/fpm/pool.d/www.conf"
+php_mysql_package: php5-mysql
+php_memcached_package: php5-memcached
+
+xhprof_download_url: https://github.com/phacility/xhprof/archive/master.tar.gz
+xhprof_download_folder_name: xhprof-master
+
 php_memory_limit: "256M"
 php_display_errors: "On"
 php_display_startup_errors: "On"
 php_realpath_cache_size: "2048K"
 php_sendmail_path: "/usr/sbin/ssmtp -t"
 php_opcache_enabled_in_ini: true
-php_opcache_memory_consumption: "256"
-php_opcache_max_accelerated_files: 4096
+php_opcache_memory_consumption: "128"
+php_opcache_max_accelerated_files: 2096
 php_max_input_vars: "4000"
+php_always_populate_raw_post_data: "-1"
 
 # Drupal VM defaults to using PHP-FPM with either Apache or Nginx. If you wish
 # to instead use Apache + mod_php with an Ubuntu base box, make sure you add
-# libapache2-mod-php5 to `extra_packages` elsewhere in this config file.
+# libapache2-mod-php7.0 to `extra_packages` elsewhere in this config file.
 php_enable_php_fpm: true
 php_fpm_listen: "127.0.0.1:9000"
 
 composer_path: /usr/bin/composer
-composer_home_path: '/home/vagrant/.composer'
-composer_global_packages: []
-# - { name: drupal/drupal-extension, release: '*' }
-# - { name: phpunit/phpunit, release: '@stable' }
-# - { name: behatch/contexts, release: '*' }
-# - { name: behat/mink, release: '1.5.*@stable' }
-# - { name: behat/mink-goutte-driver, release: '*' }
-# - { name: behat/mink-selenium2-driver, release: '*' }
-# - { name: phpunit/phpunit, release: '@stable' }
+composer_home_path: "/home/{{ drupalvm_user }}/.composer"
+composer_home_owner: "{{ drupalvm_user }}"
+composer_home_group: "{{ drupalvm_user }}"
+# composer_global_packages:
+#   - { name: phpunit/phpunit, release: '@stable' }
 
-# Run specified scripts after VM is provisioned. Path is relative to the
-# `provisioning/playbook.yml` file.
+# Run specified scripts before or after VM is provisioned. Path is relative to
+# the `provisioning/playbook.yml` file.
+pre_provision_scripts: []
 post_provision_scripts: []
   # - "../examples/scripts/configure-solr.sh"
 
@@ -313,5 +307,3 @@ selenium_version: 2.46.0
 # Other configuration.
 dashboard_install_dir: /var/www/dashboard
 known_hosts_path: ~/.ssh/known_hosts
-
-selenium_install_firefox: "true"
